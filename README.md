@@ -21,6 +21,7 @@ docker run \
 --env CLUSTER_SYSOP_EMAIL="joe@test.com" \
 --env CLUSTER_SYSOP_BBS_ADDRESS="MY1CALL@MY1CALL-2.#1.CTY.CO" \
 --env CLUSTER_PORT=1234 \
+--mount source=dxspider_data,target=/spider \
 -p 1234:1234 \
 kconkas/dxspider:latest
 ```
@@ -87,8 +88,11 @@ Now you can perform administrative tasks as sysop. Note any changes will be made
 your running docker image.
 
 ### Stopping a Running Container
-**Important:** Stopping a running Docker container will destroy all DX Spider data and customisations
-applied to it! Use `docker cp` to copy any important data to your host computer beforehand.
+Your DX Spider data and customisations will be saved in Docker volume called `dxspider_data` so that your
+user and spot databases can get preserved between consecutive runs.
+ 
+**Important:** Note `DXVars.pm` will be overwritten and a new one will be generated based on environment variables
+passed to your Docker container each time you stop and start a new container!
 
 1. Find out your running container ID
     ```bash
@@ -101,3 +105,10 @@ applied to it! Use `docker cp` to copy any important data to your host computer 
     $ docker stop 92ed43dd6de1
     92ed43dd6de1
     ```
+
+Your DX Spider data is now saved in the `dxspider_data` volume:
+```bash
+$ docker volume ls --filter name=dxspider_data
+DRIVER              VOLUME NAME
+local               dxspider_data
+```
