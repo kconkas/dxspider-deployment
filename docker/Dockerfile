@@ -23,8 +23,8 @@ RUN export SPIDER_GIT_REPOSITORY=${SPIDER_GIT_REPOSITORY:-git://scm.dxcluster.or
     export SPIDER_VERSION=${SPIDER_VERSION:-HEAD} && \
     apt-get update && \
     apt-get install -y gcc make git \
-        libcpanplus-perl libdigest-sha-perl libio-socket-ssl-perl \
-        libnet-telnet-perl libtimedate-perl libyaml-perl libtest-simple-perl libcurses-perl && \
+        libcpanplus-perl libdigest-sha-perl libio-socket-ssl-perl libnet-telnet-perl libtimedate-perl \
+        libyaml-perl libtest-simple-perl libcurses-perl vim-tiny && \
     useradd -u $SPIDER_UID -m $SPIDER_USERNAME && \
     mkdir $SPIDER_INSTALL_DIR && \
     git clone $SPIDER_GIT_REPOSITORY ${SPIDER_INSTALL_DIR} &&  \
