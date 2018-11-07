@@ -1,0 +1,12 @@
+name: dx-spider
+version: 0.1
+description: DX Spider is an amateur radio (hamradio) DX cluster server that enables amateur radio operators to post information about rare or interesting stations they have worked or heard.
+keywords:
+  - hamradio
+  - dx-spider
+  - dx-cluster
+home: https://github.com/kconkas/dxspider-deployment/helm
+sources:
+  - https://github.com/kconkas/dxspider-deployment/helm
+maintainers:
+  - name: Kristijan Conkas

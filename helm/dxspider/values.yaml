@@ -1,0 +1,21 @@
+replicaCount: 1
+image:
+  repository: kconkas/dxspider
+  tag: 1.55-063dbc33
+  pullPolicy: IfNotPresent
+
+service:
+  port: 7300
+
+cluster:
+  callsign: "T1EST"
+  latitude:
+  longitude:
+  locator:
+  qth:
+
+  sysop:
+    callsign:
+    name:
+    email:
+    bbs:

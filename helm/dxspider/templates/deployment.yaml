@@ -1,0 +1,67 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: {{ template "dxspider.fullname" . }}
+  labels:
+    app: {{ template "dxspider.fullname" . }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+    release: {{ .Release.Name }}
+    heritage: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  template:
+    metadata:
+      labels:
+        app: {{ template "dxspider.fullname" . }}
+        release: {{ .Release.Name }}
+    spec:
+      imagePullSecrets:
+        - name: {{ .Values.registryPullSecrets }}
+      containers:
+        - name: {{ .Chart.Name }}-backend
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: CLUSTER_CALLSIGN
+              value: {{ .Values.cluster.callsign }}
+            - name: CLUSTER_LATITUDE
+              value: {{ .Values.cluster.latitude }}
+            - name: CLUSTER_LONGITUDE
+              value: {{ .Values.cluster.longitude }}
+            - name: CLUSTER_LOCATOR
+              value: {{ .Values.cluster.locator }}
+            - name: CLUSTER_QTH
+              value: {{ .Values.cluster.qth }}
+            - name: CLUSTER_SYSOP_NAME
+              value: {{ .Values.cluster.sysop.name }}
+            - name: CLUSTER_SYSOP_CALLSIGN
+              value: {{ .Values.cluster.sysop.callsign }}
+            - name: CLUSTER_SYSOP_EMAIL
+              value: {{ .Values.cluster.sysop.email }}
+            - name: CLUSTER_SYSOP_BBS_ADDRESS
+              value: {{ .Values.cluster.sysop.bbs }}
+
+#            - name: SPRING_DATASOURCE_PASSWORD
+#              valueFrom:
+#                secretKeyRef:
+#                  name: {{ .Release.Name }}-postgresql
+#                  key: postgres-password
+#          ports:
+#            - containerPort: {{ .Values.image.internalPort }}
+#          livenessProbe:
+#            httpGet:
+#              scheme: HTTP
+#              path: /actuator/health
+#              port: {{ .Values.image.internalPort }}
+#            initialDelaySeconds: 30
+#            periodSeconds: 5
+#            timeoutSeconds: 5
+#          readinessProbe:
+#            httpGet:
+#              scheme: HTTP
+#              path: /actuator/health
+#              port: {{ .Values.image.internalPort }}
+#            initialDelaySeconds: 20
+#            periodSeconds: 5
+#            timeoutSeconds: 5
+#          resources:
