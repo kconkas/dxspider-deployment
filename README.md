@@ -73,8 +73,8 @@ In order to get a sysop shell in your running Docker container:
     sysop@672fba158ac2:/$
     ```
     
-    You can now perform administrative tasks (e.g. modify configuration files) or
-    simply connect to a local DX Spider instance:
+    You can now perform administrative tasks as sysop (such as modify configuration files using `vim.tiny` editor) or
+    simply connect to your local DX Spider instance:
     ```bash
     sysop@672fba158ac2:/spider/local$ cd /spider/src/
     sysop@672fba158ac2:/spider/src$ ./client  MY1CALL
@@ -84,26 +84,71 @@ In order to get a sysop shell in your running Docker container:
     MY1CALL de MY1CALL-2  4-Oct-2018 0938Z dxspider >
     ```
 
-Now you can perform administrative tasks as sysop. Note any changes will be made in the context of
-your running docker image.
-
-### Stopping a Running Container
-Your DX Spider data and customisations will be saved in Docker volume called `dxspider_data` so that your
-user and spot databases can get preserved between consecutive runs.
+### Copying Data to/from Docker Container  
+Your DX Spider data, user and spot databases, and any customisations of files under `/spider` directory will be 
+saved in Docker volume called `dxspider_data` and will be used in subsequent runs provided you started DX Spider 
+container as described in [Running in Docker](#running-in-docker).
  
 **Important:** Note `DXVars.pm` will be overwritten and a new one will be generated based on environment variables
 passed to your Docker container each time you stop and start a new container!
 
+Sometimes you may need to copy files from your workstation into your running Docker container (or vice-versa).
+For instance, you may find it easier to prepare DX Spider connection files using a fully-featured editor instead of 
+`vim.tiny`. You can do this by using the `docker cp` command:
+
+1. Find out your running container ID (see [Sysop Shell](#sysop-shell) for more details)
+2. Copy local file to container
+    ```bash
+    $ docker cp ab1cde 672fba158ac2:/spider/connect/.
+    # to verify the file got copied across
+    $ docker exec -it 672fba158ac2 ls -la /spider/connect
+    total 24
+    drwxrwsr-x  2 sysop sysop   4096 Nov  7 18:41 .
+    drwxrwsr-x 24 sysop sysop   4096 Oct 28 14:27 ..
+    -rw-r--r--  1 sysop sysop      2 Oct 25 13:34 .cvsignore
+    -rw-r--r--  1 sysop sysop     23 Oct 25 13:34 .gitignore
+    -rw-r--r--  1   502 dialout  194 Nov  7 18:40 ab1cde
+    -rw-r--r--  1 sysop sysop    194 Oct 25 13:34 gb7tlh
+    ```
+  
+    **Note:** In this example the copied file does not have the correct user/group membership. This is due to Docker 
+    container user/group databases having no relationship with host workstation's ones. If this is likely to cause 
+    issues, you can correct the permissions by running:
+    ```bash
+    $ docker exec -u root -it 672fba158ac2 chown sysop:sysop /spider/connect/ab1cde
+    # verify the file ownership has changed
+    $ docker exec -it 672fba158ac2 ls -la /spider/connect
+    total 24
+    drwxrwsr-x  2 sysop sysop 4096 Nov  7 18:05 .
+    drwxrwsr-x 24 sysop sysop 4096 Oct 28 14:27 ..
+    -rw-r--r--  1 sysop sysop    2 Oct 25 13:34 .cvsignore
+    -rw-r--r--  1 sysop sysop   23 Oct 25 13:34 .gitignore
+    -rw-r--r--  1 sysop sysop  194 Nov  7 18:40 ab1cde
+    -rw-r--r--  1 sysop sysop  194 Oct 25 13:34 gb7tlh
+    ```
+    
+3. Copy file from container to local filesystem
+    ```bash
+    $ docker cp 672fba158ac2:/spider/connect/gb7tlh .
+    # to verify the file got copied across
+    $ ls -l gb7tlh
+    -rw-r--r--  1 kconkas  users  194 25 Oct 14:34 gb7tlh
+    ```
+
+You can also use this approach to copy directory trees etc. For more details refer to 
+[docker cp](https://docs.docker.com/engine/reference/commandline/cp/) documentation.
+  
+### Stopping a Running Container
 1. Find out your running container ID
     ```bash
     $ docker ps | grep dxspider
     CONTAINER ID        IMAGE               COMMAND             CREATED              STATUS              PORTS                    NAMES
-    21cd9f6cacfb        dxspider:latest     "/entrypoint.sh"    About a minute ago   Up About a minute   0.0.0.0:1234->1234/tcp   dazzling_kowalevski
+    672fba158ac2        dxspider:latest     "/entrypoint.sh"    About a minute ago   Up About a minute   0.0.0.0:1234->1234/tcp   dazzling_kowalevski
     ```
 2.  Stop the container
     ```bash
-    $ docker stop 92ed43dd6de1
-    92ed43dd6de1
+    $ docker stop 672fba158ac2
+    672fba158ac2
     ```
 
 Your DX Spider data is now saved in the `dxspider_data` volume:
