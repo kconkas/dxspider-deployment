@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ template "dxspider.fullname" . }}-configmap
+  labels:
+    heritage: {{ .Release.Service }}
+    release: {{ .Release.Name }}
+    chart: {{ .Chart.Name }}-{{ .Chart.Version | replace "+" "_" }}
+data:
+  CLUSTER_PORT: "{{ .Values.cluster.internalPort }}"
+  CLUSTER_CALLSIGN: "{{ .Values.cluster.callsign }}"
+  CLUSTER_LATITUDE: "{{ .Values.cluster.latitude }}"
+  CLUSTER_LONGITUDE: "{{ .Values.cluster.longitude }}"
+  CLUSTER_LOCATOR: "{{ .Values.cluster.locator }}"
+  CLUSTER_QTH: "{{ .Values.cluster.qth }}"
+  CLUSTER_SYSOP_NAME: "{{ .Values.cluster.sysop.name }}"
+  CLUSTER_SYSOP_CALLSIGN: "{{ .Values.cluster.sysop.callsign }}"
+  CLUSTER_SYSOP_EMAIL: "{{ .Values.cluster.sysop.email }}"
+  CLUSTER_SYSOP_BBS_ADDRESS: "{{ .Values.cluster.sysop.bbs_address }}"

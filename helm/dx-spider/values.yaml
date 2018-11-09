@@ -1,0 +1,24 @@
+replicaCount: 1
+image:
+  repository: kconkas/dxspider
+  tag: 1.55-063dbc33
+  pullPolicy: IfNotPresent
+
+service:
+  name: dx-spider
+  type: LoadBalancer
+  externalPort: 7300
+
+cluster:
+  internalPort: 7300
+  callsign: "C1ALL-1"
+  latitude: "0.0"
+  longitude: "0.0"
+  locator: "AA00AA"
+  qth: "CHANGEME"
+
+  sysop:
+    callsign: "C1ALL"
+    name: "Sysop Name"
+    email: "sysop@foo.com"
+    bbs_address: "C1ALL@C1ALL-2.#1.CTY.CO"
