@@ -29,6 +29,12 @@ kconkas/dxspider:latest
 In the above command, ensure that `CLUSTER_PORT` value equals to that of the 
 published port `-p <host port>:<container port>`.
 
+**Important:** Once generated, DX Spider configuration files will be preserved for 
+subsequent runs in Docker volume named `dxspider_data`. For subsequent runs you 
+can omit setting the `CLUSTER_*` environment variables as they will be ignored anyway. 
+If you wish to change this behaviour and overwrite configuration files (for example 
+to change some parameters) add `--env OVERWRITE_CONFIG="yes"` to the above command.
+
 If your node started up successfully, at the end of the startup you should 
 get an output similar to:
 ```
@@ -88,9 +94,6 @@ In order to get a sysop shell in your running Docker container:
 Your DX Spider data, user and spot databases, and any customisations of files under `/spider` directory will be 
 saved in Docker volume called `dxspider_data` and will be used in subsequent runs provided you started DX Spider 
 container as described in [Running in Docker](#running-in-docker).
- 
-**Important:** Note `DXVars.pm` will be overwritten and a new one will be generated based on environment variables
-passed to your Docker container each time you stop and start a new container!
 
 Sometimes you may need to copy files from your workstation into your running Docker container (or vice-versa).
 For instance, you may find it easier to prepare DX Spider connection files using a fully-featured editor instead of 
