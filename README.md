@@ -77,7 +77,7 @@ In order to get a sysop shell in your running Docker container:
 
 2. Get sysop shell
     ```bash
-    $ docker exec -it 672fba158ac2 bash
+    $ docker exec -it 672fba158ac2 sh
     sysop@672fba158ac2:/$
     ```
     
