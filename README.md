@@ -7,6 +7,8 @@ This project focuses on easy DX Spider deployment in virtualised/cloud
 environments and as such its focus is primarily supporting telnet nodes
 running on TCP networks.
 
+**Note:** if you first run this docker image before 23rd July 2019, please refer to [Alpine image migration](./README.alpine-migration.md) for important information.
+
 ## Running in Docker
 DX Spider node parameters can be specified via Docker environment variables:
 ```bash
