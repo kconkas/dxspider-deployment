@@ -20,7 +20,7 @@ You can delete this volume by running:
 docker volume rm dxspider_data
 ```
 
-**Important** this will destroy all your current DX Spider data. If there are any configuration files or customisations you would like to save, [copy them to your local drive](./README.md#copying-data-tofrom-docker-container) beforehand.
+**Important:** this will destroy all your current DX Spider data. If there are any configuration files or customisations you would like to save, [copy them to your local drive](./README.md#copying-data-tofrom-docker-container) beforehand.
 
 ### 3. Manually copy necessary files
 
