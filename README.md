@@ -12,7 +12,8 @@ running on TCP networks.
 ## Running in Docker
 DX Spider node parameters can be specified via Docker environment variables:
 ```bash
-docker run \
+$ docker pull kconkas/dxspider:latest
+$ docker run \
 --env CLUSTER_CALLSIGN="MY1CALL-2" \
 --env CLUSTER_SYSOP_NAME="Joe Bloggs" \
 --env CLUSTER_SYSOP_CALLSIGN="MY1CALL" \
