@@ -12,13 +12,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-ARG SPIDER_VERSION="HEAD"
-
 FROM alpine:latest
 
 ENV SPIDER_INSTALL_DIR=${SPIDER_INSTALL_DIR:-/spider}
 ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop} SPIDER_UID=${SPIDER_UID:-1000}
 ENV SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
+ENV SPIDER_VERSION="mojo"
+# SPIDER_VERSION can be "mojo" or HEAD
 
 COPY entrypoint.sh /entrypoint.sh
 
@@ -28,7 +28,7 @@ RUN apk add gcc git make \
     perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl perl-net-telnet perl-timedate perl-yaml-libyaml \
     perl-test-simple perl-app-cpanminus
 RUN cpanm --no-wget Curses
-RUN adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} $SPIDER_USERNAME
+RUN adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
 RUN git clone ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
 RUN (cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION)
