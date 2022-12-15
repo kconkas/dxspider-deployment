@@ -8,7 +8,7 @@ services:
       args:
         - SPIDER_VERSION=mojo
     volumes:
-      - cluster_local_data:/spider/local
+      - cluster_local_cmd_data:/spider/local_cmd
       - cluster_connect_data:/spider/connect
       - cluster_scripts_data:/spider/scripts
     env_file:
@@ -23,6 +23,6 @@ services:
         max-file: "10"
 
 volumes:
-  cluster_local_data:
+  cluster_local_cmd_data:
   cluster_connect_data:
   cluster_scripts_data:
