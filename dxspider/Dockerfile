@@ -31,7 +31,7 @@ RUN apk add gcc git make \
     perl-timedate perl-yaml-libyaml \
     perl-test-simple perl-app-cpanminus
 RUN cpanm --no-wget Curses Data::Structure::Util Mojo::IOLoop
-RUN cpanm --no-wget JSON
+RUN cpanm --no-wget JSON Math::Round
 RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
 RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
