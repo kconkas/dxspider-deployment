@@ -31,11 +31,11 @@ RUN cpanm --no-wget Curses
 RUN adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} $SPIDER_USERNAME
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
 RUN git clone $SPIDER_GIT_REPOSITORY ${SPIDER_INSTALL_DIR}
-RUN cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION
+RUN (cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION)
 RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
 RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
     find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;
-RUN cd ${SPIDER_INSTALL_DIR}/src && make
+RUN (cd ${SPIDER_INSTALL_DIR}/src && make)
 RUN chown -R ${SPIDER_USERNAME}:${SPIDER_USERNAME} ${SPIDER_INSTALL_DIR}/.
 RUN apk del --purge gcc git make \
     musl-dev ncurses-dev perl-app-cpanminus perl-dev
