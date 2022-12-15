@@ -12,13 +12,13 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-ARG SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
 ARG SPIDER_VERSION="HEAD"
 
 FROM alpine:latest
 
 ENV SPIDER_INSTALL_DIR=${SPIDER_INSTALL_DIR:-/spider}
 ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop} SPIDER_UID=${SPIDER_UID:-1000}
+ENV SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
 
 COPY entrypoint.sh /entrypoint.sh
 
