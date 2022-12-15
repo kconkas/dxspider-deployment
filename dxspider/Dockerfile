@@ -30,6 +30,7 @@ RUN export SPIDER_GIT_REPOSITORY=${SPIDER_GIT_REPOSITORY:-git://scm.dxcluster.or
     perl-test-simple perl-app-cpanminus && \
     cpanm --no-wget Curses && \
     adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} $SPIDER_USERNAME && \
+    git config --global --add safe.directory ${SPIDER_INSTALL_DIR} && \
     git clone $SPIDER_GIT_REPOSITORY ${SPIDER_INSTALL_DIR} &&  \
     (cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION) && \
     mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd && \
