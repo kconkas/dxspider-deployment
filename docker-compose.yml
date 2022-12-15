@@ -1,0 +1,26 @@
+version: "3.9"
+
+services:
+  cluster:
+    build:
+      context: ./docker
+      dockerfile: Dockerfile
+      args:
+        - IMAGE=alpine
+        - IMAGE_TAG=3.9 # Same as default.env
+        - SPIDER_VERSION=mojo # Instead of HEAD
+    volumes:
+      - cluster_data:/spider
+    env_file:
+      - prod.env
+    ports:
+      - 7300:7300
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+volumes:
+  cluster_data:
