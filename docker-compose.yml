@@ -8,7 +8,8 @@ services:
       args:
         - SPIDER_VERSION=mojo
     volumes:
-      - cluster_data:/spider
+      - cluster_local_data:/spider/local
+      - cluster_local_cmd_data:/spider/local_cmd
     env_file:
       - prod.env
     ports:
@@ -21,4 +22,5 @@ services:
         max-file: "10"
 
 volumes:
-  cluster_data:
+  cluster_local_data:
+  cluster_local_cmd_data:
