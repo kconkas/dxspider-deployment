@@ -27,7 +27,8 @@ COPY entrypoint.sh /entrypoint.sh
 RUN apk update
 RUN apk add gcc git make \
     musl-dev ncurses-libs ncurses-dev \
-    perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl perl-net-telnet perl-timedate perl-yaml-libyaml \
+    perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl perl-net-telnet \
+    perl-timedate perl-yaml-libyaml \
     perl-test-simple perl-app-cpanminus
 RUN cpanm --no-wget Curses Data::Structure::Util Mojo::IOLoop
 RUN cpanm --no-wget JSON
