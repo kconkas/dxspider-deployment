@@ -17,8 +17,8 @@ FROM alpine:latest
 ENV SPIDER_INSTALL_DIR=${SPIDER_INSTALL_DIR:-/spider}
 ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop} SPIDER_UID=${SPIDER_UID:-1000}
 ENV SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
-ENV SPIDER_VERSION="mojo"
-# SPIDER_VERSION can be "mojo" or HEAD
+ENV SPIDER_VERSION="origin/mojo"
+# SPIDER_VERSION can be "origin/mojo" or "origin/master"
 
 COPY entrypoint.sh /entrypoint.sh
 
