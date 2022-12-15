@@ -15,8 +15,8 @@
 FROM alpine:latest
 
 ARG SPIDER_GIT_REPOSITORY=git://scm.dxcluster.org/scm/spider
-# SPIDER_VERSION can be "origin/mojo" or "origin/master"
-ARG SPIDER_VERSION=origin/master
+# SPIDER_VERSION can be "mojo" or "master"
+ARG SPIDER_VERSION=master
 
 ENV SPIDER_INSTALL_DIR=${SPIDER_INSTALL_DIR:-/spider}
 ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop}
@@ -32,8 +32,7 @@ RUN apk add gcc git make \
 RUN cpanm --no-wget Curses
 RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
-RUN git clone ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
-RUN (cd ${SPIDER_INSTALL_DIR} && git reset --hard ${SPIDER_VERSION})
+RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
 RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
 RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
     find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;

@@ -20,8 +20,8 @@ services:
       context: ./dxspider
       dockerfile: Dockerfile
       args:
-        # SPIDER_VERSION can be "origin/mojo" or "origin/master"
-        - SPIDER_VERSION=origin/mojo
+        # SPIDER_VERSION can be "mojo" or "master"
+        - SPIDER_VERSION=mojo
     volumes:
       - cluster_local_cmd_data:/spider/local_cmd
       - cluster_connect_data:/spider/connect
