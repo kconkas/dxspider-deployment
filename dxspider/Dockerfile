@@ -24,26 +24,22 @@ ENV SPIDER_UID=${SPIDER_UID:-1000}
 
 COPY entrypoint.sh /entrypoint.sh
 
-# Update packages
 RUN apk update
-# Install basic tooling
-RUN apk add gcc git make \
-    musl-dev ncurses-libs ncurses-dev
-# Add repo and basic stuff
-RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
-RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
-RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
-RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
-RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
-    find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;
-# Perl dependencies
+RUN apk add gcc git make musl-dev \
+    ncurses-libs ncurses-dev \
+    nano
 RUN apk add perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl
 RUN apk add perl-net-telnet perl-timedate perl-yaml-libyaml
 RUN apk add perl-test-simple perl-app-cpanminus
 RUN apk add perl-curses perl-mojolicious
 RUN apk add perl-math-round perl-json
 RUN cpanm --no-wget Data::Structure::Util
-# Finish configuration
+RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
+RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
+RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
+RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
+RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
+    find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;
 RUN (cd ${SPIDER_INSTALL_DIR}/src && make)
 RUN chown -R ${SPIDER_USERNAME}:${SPIDER_USERNAME} ${SPIDER_INSTALL_DIR}/.
 RUN apk del --purge gcc git make \
