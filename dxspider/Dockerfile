@@ -26,12 +26,13 @@ COPY entrypoint.sh /entrypoint.sh
 
 RUN apk update
 RUN apk add gcc git make \
-    musl-dev ncurses-libs ncurses-dev \
-    perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl perl-net-telnet \
-    perl-timedate perl-yaml-libyaml \
-    perl-test-simple perl-app-cpanminus
-RUN cpanm --no-wget Curses Data::Structure::Util Mojo::IOLoop
-RUN cpanm --no-wget JSON Math::Round
+    musl-dev ncurses-libs ncurses-dev
+RUN apk add perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl
+RUN apk add perl-net-telnet perl-timedate perl-yaml-libyaml
+RUN apk add perl-test-simple perl-app-cpanminus
+RUN apk add perl-curses perl-mojolicious
+RUN apk add perl-math-round perl-json
+RUN cpanm --no-wget Data::Structure::Util
 RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
 RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
