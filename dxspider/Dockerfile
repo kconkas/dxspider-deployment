@@ -12,12 +12,16 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
+ARG SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
+ARG SPIDER_VERSION="origin/mojo"
+
 FROM alpine:latest
 
 ENV SPIDER_INSTALL_DIR=${SPIDER_INSTALL_DIR:-/spider}
-ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop} SPIDER_UID=${SPIDER_UID:-1000}
-ENV SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
-ENV SPIDER_VERSION="origin/mojo"
+ENV SPIDER_USERNAME=${SPIDER_USERNAME:-sysop}
+ENV SPIDER_UID=${SPIDER_UID:-1000}
+ENV ENV_SPIDER_GIT_REPOSITORY=$SPIDER_GIT_REPOSITORY
+ENV ENV_SPIDER_VERSION=$SPIDER_VERSION
 # SPIDER_VERSION can be "origin/mojo" or "origin/master"
 
 COPY entrypoint.sh /entrypoint.sh
@@ -28,10 +32,10 @@ RUN apk add gcc git make \
     perl-db_file perl-dev perl-digest-sha1 perl-io-socket-ssl perl-net-telnet perl-timedate perl-yaml-libyaml \
     perl-test-simple perl-app-cpanminus
 RUN cpanm --no-wget Curses
-RUN adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
+RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
-RUN git clone ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
-RUN (cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION)
+RUN git clone ${ENV_SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
+RUN (cd ${SPIDER_INSTALL_DIR} && git reset --hard ${ENV_SPIDER_VERSION})
 RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
 RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
     find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;
@@ -41,6 +45,6 @@ RUN apk del --purge gcc git make \
     musl-dev ncurses-dev perl-app-cpanminus perl-dev
 RUN rm -rf /var/cache/apk/*
 
-USER $SPIDER_UID
+USER ${SPIDER_UID}
 ENTRYPOINT ["/bin/sh"]
 CMD ["/entrypoint.sh"]
