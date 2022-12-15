@@ -63,5 +63,5 @@ docker compose down
 In order to get a sysop shell in your running Docker container:
 
 ```sh
-docker-compose exec cluster sh
+docker compose exec cluster sh
 ```
