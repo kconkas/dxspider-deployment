@@ -6,7 +6,7 @@ services:
       context: ./dxspider
       dockerfile: Dockerfile
       args:
-        - SPIDER_VERSION=mojo
+        - SPIDER_VERSION="origin/mojo"
     volumes:
       - cluster_local_cmd_data:/spider/local_cmd
       - cluster_connect_data:/spider/connect

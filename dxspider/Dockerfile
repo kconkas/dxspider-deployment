@@ -13,7 +13,7 @@
 #   limitations under the License.
 
 ARG SPIDER_GIT_REPOSITORY="git://scm.dxcluster.org/scm/spider"
-ARG SPIDER_VERSION="origin/mojo"
+ARG SPIDER_VERSION="origin/master"
 
 FROM alpine:latest
 
