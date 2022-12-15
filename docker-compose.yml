@@ -3,12 +3,12 @@ version: "3.9"
 services:
   cluster:
     build:
-      context: ./docker
+      context: ./dxspider
       dockerfile: Dockerfile
       args:
         - IMAGE=alpine
-        - IMAGE_TAG=3.9 # Same as default.env
-        - SPIDER_VERSION=mojo # Instead of HEAD
+        - IMAGE_TAG=latest
+        - SPIDER_VERSION=mojo # or of HEAD
     volumes:
       - cluster_data:/spider
     env_file:
