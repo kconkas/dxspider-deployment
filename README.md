@@ -52,6 +52,12 @@ MY1CALL de MY1CALL-2  4-Oct-2018 0918Z dxspider >
 If you want to allow external connections to your node, you will need to allow
 this traffic on your firewall.
 
+To put down the server, run:
+
+```sh
+docker compose down
+```
+
 ### Sysop Shell
 
 In order to get a sysop shell in your running Docker container:
