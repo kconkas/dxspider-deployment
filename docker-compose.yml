@@ -42,3 +42,4 @@ volumes:
   cluster_local_cmd_data:
   cluster_connect_data:
   cluster_scripts_data:
+  cluster_local_data_data:
