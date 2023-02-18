@@ -37,7 +37,8 @@ RUN cpanm --no-wget Data::Structure::Util
 RUN adduser -D -u ${SPIDER_UID} -h ${SPIDER_INSTALL_DIR} ${SPIDER_USERNAME}
 RUN git config --global --add safe.directory ${SPIDER_INSTALL_DIR}
 RUN git clone -b ${SPIDER_VERSION} ${SPIDER_GIT_REPOSITORY} ${SPIDER_INSTALL_DIR}
-RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd
+RUN mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd \
+    ${SPIDER_INSTALL_DIR}/local_data
 RUN find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
     find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \;
 RUN (cd ${SPIDER_INSTALL_DIR}/src && make)
