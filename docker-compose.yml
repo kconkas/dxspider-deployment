@@ -26,6 +26,7 @@ services:
       - cluster_local_cmd_data:/spider/local_cmd
       - cluster_connect_data:/spider/connect
       - cluster_scripts_data:/spider/scripts
+      - cluster_local_data_data:/spider/local_data # For the Mojo branch
     env_file:
       - prod.env
     ports:
