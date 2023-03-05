@@ -13,18 +13,23 @@ Rename the file `prod.sample.env` to `prod.env`, edit it at your will, and then
 just run the following command:
 
 ```sh
-docker compose up -d --build
+sudo ./build
 ```
 
-Note: you might want to change some extra settings inside the
-`docker-compose.yml` file itself.
+You should not need to change anything in the `docker-compose.yml` file itself.
+A directory called `./spider` will be created and used as the storage location for
+your cluster's files. You should not execute cluster commands within this directory.
 
-Please ensure that the `CLUSTER_PORT` value equals to that of the
-published port in the `docker-compose.yml` file.
+Once the build process is completed, assuming there were no issues, you can use the `dx`
+script to control the state of the docker container and DXspider. To bring the container
+online, simply type:
+```sh
+./dx up
+```
 
-If your node started up successfully, at the end of the startup you should
-get an output similar to:
-
+This will start the container and the cluster software within it. To see the debug logs,
+and tell if the cluster is running successfully, look at the docker container logs using
+`docker-compose logs` or `./dx logs`. You should get an output similar to:
 ```txt
 reading database descriptors ...
 doing local initialisation ...
@@ -55,13 +60,19 @@ this traffic on your firewall.
 To put down the server, run:
 
 ```sh
-docker compose down
+./dx down
 ```
 
 ### Sysop Shell
 
 In order to get a sysop shell in your running Docker container:
-
 ```sh
-docker compose exec cluster sh
+./dx sh
 ```
+
+### Cluster Console
+In order to get a cluster console in your running Docker container:
+```sh
+./dx console
+```
+

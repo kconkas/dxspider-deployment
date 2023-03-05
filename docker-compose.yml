@@ -1,4 +1,4 @@
-#   Copyright 2022 Rui Oliveira
+#   Copyright 2023 Brian Stucker
 #
 #   Licensed under the Apache License, Version 2.0 (the "License");
 #   you may not use this file except in compliance with the License.
@@ -12,25 +12,37 @@
 #   See the License for the specific language governing permissions and
 #   limitations under the License.
 
-version: "3.9"
+version: "3.3"
 
 services:
-  cluster:
+  dxspider:
     build:
-      context: ./dxspider
+      context: ./app
       dockerfile: Dockerfile
       args:
-        # SPIDER_VERSION can be "mojo" or "master"
-        - SPIDER_VERSION=mojo
-    volumes:
-      - cluster_local_cmd_data:/spider/local_cmd
-      - cluster_connect_data:/spider/connect
-      - cluster_scripts_data:/spider/scripts
-      - cluster_local_data_data:/spider/local_data # For the Mojo branch
+        - SPIDER_GIT_REPOSITORY=git://scm.dxcluster.org/scm/spider
+        - SPIDER_BRANCH=${SPIDER_BRANCH:-mojo}
+        - CLUSTER_CALLSIGN=${CLUSTER_CALLSIGN}
+        - CLUSTER_SYSOP_CALLSIGN=${CLUSTER_SYSOP_CALLSIGN}
+        - CLUSTER_SYSOP_NAME=${CLUSTER_SYSOP_NAME}
+        - CLUSTER_SYSOP_EMAIL=${CLUSTER_SYSOP_EMAIL}
+        - CLUSTER_SYSOP_BBS_ADDRESS=${CLUSTER_SYSOP_BBS_ADDRESS}
+        - CLUSTER_QTH=${CLUSTER_QTH}
+        - CLUSTER_LOCATOR=${CLUSTER_LOCATOR}
+        - CLUSTER_LATITUDE=${CLUSTER_LATITUDE}
+        - CLUSTER_LONGITUDE=${CLUSTER_LONGITUDE}
+        - CLUSTER_PORT=${CLUSTER_PORT}
+        - CLUSTER_LANG=${CLUSTER_LANG}
+        - CLUSTER_NO=${CLUSTER_NO}
+        - CLUSTER_YES=${CLUSTER_YES}
+        - CLUSTER_USER_INTERVAL=${CLUSTER_USER_INTERVAL}
     env_file:
       - prod.env
+    tty: true
     ports:
-      - 7300:7300
+      - "${CLUSTER_PORT:-7300}:7300"
+    volumes:
+      - dxspider-data:/spider:rw
     restart: always
     logging:
       driver: "json-file"
@@ -39,7 +51,9 @@ services:
         max-file: "10"
 
 volumes:
-  cluster_local_cmd_data:
-  cluster_connect_data:
-  cluster_scripts_data:
-  cluster_local_data_data:
+   dxspider-data:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider

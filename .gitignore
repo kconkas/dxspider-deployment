@@ -32,3 +32,9 @@ requirements.lock
 
 # Real production file
 prod.env
+.env
+
+# Spider mount point
+spider/
+backup/
+*.zip
