@@ -42,7 +42,12 @@ services:
     ports:
       - "${CLUSTER_PORT:-7300}:7300"
     volumes:
-      - dxspider-data:/spider:rw
+      - dxspider-data-connect:/spider/connect:rw
+      - dxspider-data-data:/spider/data:rw    
+      - dxspider-data-local:/spider/local:rw
+      - dxspider-data-local_cmd:/spider/local_cmd:rw
+      - dxspider-data-local_data:/spider/local_data:rw
+      - dxspider-data-tmp:/tmp:rw
     restart: always
     logging:
       driver: "json-file"
@@ -51,9 +56,39 @@ services:
         max-file: "10"
 
 volumes:
-   dxspider-data:
+   dxspider-data-connect:
       driver: local
       driver_opts:
          o: bind
          type: none
-         device: /home/brian/dxspider-deployment/spider
+         device: /home/brian/dxspider-deployment/spider/connect
+   dxspider-data-data:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/data
+   dxspider-data-local:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local
+   dxspider-data-local_cmd:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local_cmd
+   dxspider-data-local_data:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local_data
+   dxspider-data-tmp:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/tmp

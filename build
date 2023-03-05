@@ -77,8 +77,8 @@ uid=`id -u sysop`
 gid=`getent group spider | awk -F':' '{ print $3 }'`
 
 if [ ! -d './spider' ]; then
-  echo "Creating mount point"
-  mkdir -m2755 -p spider
+  echo "Creating mount points"
+  mkdir -m2755 -p spider spider/connect spider/data spider/local spider/local_cmd spider/local_data spider/tmp
 fi
 
 chmod 2755 ./spider

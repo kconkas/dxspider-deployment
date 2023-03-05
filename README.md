@@ -63,6 +63,14 @@ To put down the server, run:
 ./dx down
 ```
 
+Finally, if you need to rebuild the dxspider container, first issue a clean command and then build.
+This will completely rebuild your cluser from scratch using the latest version of DXSpider. Your data files
+should be fine as they are mounted to the local directory `./spider` 
+```sh
+sudo ./clean
+sudo ./build
+./dx up
+```
 ### Sysop Shell
 
 In order to get a sysop shell in your running Docker container:
