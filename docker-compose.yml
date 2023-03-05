@@ -47,6 +47,7 @@ services:
       - dxspider-data-local:/spider/local:rw
       - dxspider-data-local_cmd:/spider/local_cmd:rw
       - dxspider-data-local_data:/spider/local_data:rw
+      - dxspider-data-scripts:/spider/scripts:rw
       - dxspider-data-tmp:/tmp:rw
     restart: always
     logging:
@@ -86,6 +87,12 @@ volumes:
          o: bind
          type: none
          device: /home/brian/dxspider-deployment/spider/local_data
+   dxspider-data-scripts:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/scripts
    dxspider-data-tmp:
       driver: local
       driver_opts:

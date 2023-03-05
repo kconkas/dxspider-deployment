@@ -52,7 +52,8 @@ RUN apk add \
     perl-mojolicious \
     perl-net-telnet \
     perl-timedate \
-    perl-yaml-libyaml
+    perl-yaml-libyaml \
+    wget
 
 RUN cpanm --no-wget Data::Structure::Util Net::CIDR::Lite EV Math::Round && \
     apk del --purge \
