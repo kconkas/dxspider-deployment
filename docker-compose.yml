@@ -1,0 +1,101 @@
+#   Copyright 2023 Brian Stucker
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+version: "3.3"
+
+services:
+  dxspider:
+    build:
+      context: ./app
+      dockerfile: Dockerfile
+      args:
+        - SPIDER_GIT_REPOSITORY=git://scm.dxcluster.org/scm/spider
+        - SPIDER_BRANCH=${SPIDER_BRANCH:-mojo}
+        - CLUSTER_CALLSIGN=${CLUSTER_CALLSIGN}
+        - CLUSTER_SYSOP_CALLSIGN=${CLUSTER_SYSOP_CALLSIGN}
+        - CLUSTER_SYSOP_NAME=${CLUSTER_SYSOP_NAME}
+        - CLUSTER_SYSOP_EMAIL=${CLUSTER_SYSOP_EMAIL}
+        - CLUSTER_SYSOP_BBS_ADDRESS=${CLUSTER_SYSOP_BBS_ADDRESS}
+        - CLUSTER_QTH=${CLUSTER_QTH}
+        - CLUSTER_LOCATOR=${CLUSTER_LOCATOR}
+        - CLUSTER_LATITUDE=${CLUSTER_LATITUDE}
+        - CLUSTER_LONGITUDE=${CLUSTER_LONGITUDE}
+        - CLUSTER_PORT=${CLUSTER_PORT}
+        - CLUSTER_LANG=${CLUSTER_LANG}
+        - CLUSTER_NO=${CLUSTER_NO}
+        - CLUSTER_YES=${CLUSTER_YES}
+        - CLUSTER_USER_INTERVAL=${CLUSTER_USER_INTERVAL}
+    env_file:
+      - prod.env
+    tty: true
+    ports:
+      - "${CLUSTER_PORT:-7300}:7300"
+    volumes:
+      - dxspider-data-connect:/spider/connect:rw
+      - dxspider-data-data:/spider/data:rw    
+      - dxspider-data-local:/spider/local:rw
+      - dxspider-data-local_cmd:/spider/local_cmd:rw
+      - dxspider-data-local_data:/spider/local_data:rw
+      - dxspider-data-scripts:/spider/scripts:rw
+      - dxspider-data-tmp:/tmp:rw
+    restart: always
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "200k"
+        max-file: "10"
+
+volumes:
+   dxspider-data-connect:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/connect
+   dxspider-data-data:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/data
+   dxspider-data-local:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local
+   dxspider-data-local_cmd:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local_cmd
+   dxspider-data-local_data:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/local_data
+   dxspider-data-scripts:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/scripts
+   dxspider-data-tmp:
+      driver: local
+      driver_opts:
+         o: bind
+         type: none
+         device: /home/brian/dxspider-deployment/spider/tmp

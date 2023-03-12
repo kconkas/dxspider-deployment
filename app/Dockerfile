@@ -1,0 +1,68 @@
+#   Copyright 2023 Brian Stucker
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+
+FROM dxspider-deployment_base:latest
+
+ARG SPIDER_GIT_REPOSITORY=$SPIDER_GIT_REPOSITORY
+ENV SPIDER_GIT_REPOSITORY=$SPIDER_GIT_REPOSITORY
+ARG SPIDER_BRANCH=$SPIDER_BRANCH
+ENV SPIDER_BRANCH=$SPIDER_BRANCH
+ARG SPIDER_INSTALL_DIR=/spider
+ENV SPIDER_INSTALL_DIR=$SPIDER_INSTALL_DIR
+ARG CLUSTER_CALLSIGN=${CLUSTER_CALLSIGN}
+ENV CLUSTER_CALLSIGN=$CLUSTER_CALLSIGN
+ARG CLUSTER_SYSOP_CALLSIGN=${CLUSTER_SYSOP_CALLSIGN}
+ENV CLUSTER_SYSOP_CALLSIGN=$CLUSTER_SYSOP_CALLSIGN
+ARG CLUSTER_SYSOP_NAME=${CLUSTER_SYSOP_NAME}
+ENV CLUSTER_SYSOP_NAME=$CLUSTER_SYSOP_NAME
+ARG CLUSTER_SYSOP_EMAIL=${CLUSTER_SYSOP_EMAIL}
+ENV CLUSTER_SYSOP_EMAIL=$CLUSTER_SYSOP_EMAIL
+ARG CLUSTER_SYSOP_BBS_ADDRESS=${CLUSTER_SYSOP_BBS_ADDRESS}
+ENV CLUSTER_SYSOP_BBS_ADDRESS=$CLUSTER_SYSOP_BBS_ADDRESS
+ARG CLUSTER_QTH=${CLUSTER_QTH}
+ENV CLUSTER_QTH=$CLUSTER_QTH
+ARG CLUSTER_LOCATOR=${CLUSTER_LOCATOR}
+ENV CLUSTER_LOCATOR=$CLUSTER_LOCATOR
+ARG CLUSTER_LATITUDE=${CLUSTER_LATITUDE}
+ENV CLUSTER_LATITUDE=$CLUSTER_LATITUDE
+ARG CLUSTER_LONGITUDE=${CLUSTER_LONGITUDE}
+ARG CLUSTER_LONGITUDE=${CLUSTER_LONGITUDE}
+ARG CLUSTER_PORT=${CLUSTER_PORT}
+ENV CLUSTER_PORT=$CLUSTER_PORT
+ARG CLUSTER_LANG=${CLUSTER_LANG}
+ENV CLUSTER_LANG=$CLUSTER_LANG
+ARG CLUSTER_NO=${CLUSTER_NO}
+ENV CLUSTER_NO=$CLUSTER_NO
+ARG CLUSTER_YES=${CLUSTER_YES}
+ENV CLUSTER_YES=$CLUSTER_YES
+ARG CLUSTER_USER_INTERVAL=${CLUSTER_USER_INTERVAL}
+ENV CLUSTER_USER_INTERVAL=$CLUSTER_USER_INTERVAL
+
+WORKDIR /
+
+COPY --chown=$USER:$GROUP configure_cluster.sh /usr/local/bin/
+
+RUN git clone -b $SPIDER_BRANCH $SPIDER_GIT_REPOSITORY $SPIDER_INSTALL_DIR && \
+    chown $USER:$GROUP $SPIDER_INSTALL_DIR && \
+    mkdir -p $SPIDER_INSTALL_DIR/local $SPIDER_INSTALL_DIR/local_cmd $SPIDER_INSTALL_DIR/local_data && \
+    find $SPIDER_INSTALL_DIR/ -type d -exec sh -c "chmod 1775 \"{}\"" \; && \
+    find $SPIDER_INSTALL_DIR/ -type f -name '*.pl' -exec sh -c "chmod 775 {}" \; && \
+    ( cd $SPIDER_INSTALL_DIR/src && make ) && \
+    chown -R $USER:$GROUP $SPIDER_INSTALL_DIR && \
+    ln -s $SPIDER_INSTALL_DIR/perl/console.pl /usr/local/bin/dx && \
+    ln -s $SPIDER_INSTALL_DIR/perl/*dbg /usr/local/bin && \
+    chmod +x /usr/local/bin/configure_cluster.sh && \
+    su-exec $USER /usr/local/bin/configure_cluster.sh
+
+CMD [ "/spider/perl/cluster.pl" ]

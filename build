@@ -1,0 +1,115 @@
+#!/bin/bash
+#   Copyright 2023 Brian Stucker
+#
+#   Licensed under the Apache License, Version 2.0 (the "License");
+#   you may not use this file except in compliance with the License.
+#   You may obtain a copy of the License at
+#
+#       http://www.apache.org/licenses/LICENSE-2.0
+#
+#   Unless required by applicable law or agreed to in writing, software
+#   distributed under the License is distributed on an "AS IS" BASIS,
+#   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+#   See the License for the specific language governing permissions and
+#   limitations under the License.
+#
+#   Some portions of this file are based on the install_dxspider.sh script created by
+#   Yiannis Panagou, SV5FRI, https://www.sv5fri.eu, sv5fri@gmail.com
+#
+
+
+# Check the script is being run by root user)
+check_run_user() {
+if [ "$(id -u)" != "0" ]; then
+   echo "This script must be run as root" 1>&2
+   exit 1
+fi
+}
+
+# Create User and group - Create Directory and Symbolic Link
+check_if_exist_user() {
+egrep -i "^sysop:" /etc/passwd;
+    if [ $? -eq 0 ]; then
+        echo "User SYSOP exists."
+    else
+        echo "User does not exist -- proceed to create user sysop"
+        echo -e " "
+        home=`pwd`/spider
+        useradd -m -s /bin/bash sysop
+        echo "Please enter password for sysop user"
+        passwd sysop
+   fi
+}
+
+check_if_exist_group() {
+egrep -i "^spider" /etc/group;
+    if [ $? -eq 0 ]; then
+        echo "Group SPIDER exists."
+    else
+        echo "Group does not exist -- proceed to create spider group"
+        groupadd -g 251 spider
+fi
+}
+
+create_user_group() {
+
+# Greate user
+check_if_exist_user
+
+# Create group
+check_if_exist_group
+
+# Add the users to the spider group
+echo -e "Add the users (sysop, root, and `logname`) to the spider group"
+usermod -aG spider sysop
+usermod -aG spider root
+tmp=`logname`
+usermod -aG spider ${tmp}
+}
+
+install_spider() {
+ # Create symbolic links
+if [ ! -h '.env' ]; then
+ ln -s prod.env .env
+fi
+
+uid=`id -u sysop`
+gid=`getent group spider | awk -F':' '{ print $3 }'`
+
+if [ ! -d './spider' ]; then
+  echo "Creating mount points"
+  mkdir -m2755 -p spider spider/connect spider/data spider/local spider/local_cmd spider/local_data spider/tmp spider/scripts
+fi
+
+chmod 2755 ./spider
+chown -R $uid:$gid ./spider
+
+echo "UID=" $uid
+echo "GID=" $gid
+
+sed -i "/^USER=/c\USER=${uid}" ./prod.env
+sed -i "/^GROUP=/c\GROUP=${gid}" ./prod.env
+ 
+sudo docker build -t dxspider-deployment_base base --build-arg USER=${uid} --build-arg GROUP=${gid}
+sudo docker-compose build
+}
+
+check_prod_env() {
+  if [ ! -f "./prod.env" ]; then
+    echo "Please edit the prod.env file to match your settings."
+    cp ./prod.sample.env ./prod.env
+    chown `logname`:`logname` ./prod.env
+    exit 0
+  fi
+}
+
+main() {
+ check_run_user
+ create_user_group
+ check_prod_env
+ install_spider
+}
+
+main
+
+exit 0

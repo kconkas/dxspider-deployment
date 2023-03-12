@@ -29,3 +29,12 @@ cloud-formation-deploy.yaml
 # Kubernetes Helm
 requirements.lock
 **/charts/*.tgz
+
+# Real production file
+prod.env
+.env
+
+# Spider mount point
+spider/
+backup/
+*.zip
