@@ -32,7 +32,7 @@ RUN export SPIDER_GIT_REPOSITORY=${SPIDER_GIT_REPOSITORY:-git://scm.dxcluster.or
     adduser -D -u $SPIDER_UID -h ${SPIDER_INSTALL_DIR} $SPIDER_USERNAME && \
     git clone $SPIDER_GIT_REPOSITORY ${SPIDER_INSTALL_DIR} &&  \
     (cd $SPIDER_INSTALL_DIR && git reset --hard $SPIDER_VERSION) && \
-    mkdir ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd && \
+    mkdir -p ${SPIDER_INSTALL_DIR}/local ${SPIDER_INSTALL_DIR}/local_cmd && \
     find ${SPIDER_INSTALL_DIR}/. -type d -exec chmod 2775 {} \; && \
     find ${SPIDER_INSTALL_DIR}/. -type f -name '*.pl' -exec chmod 775 {} \; && \
     (cd ${SPIDER_INSTALL_DIR}/src && make) && \
